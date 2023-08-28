@@ -5,6 +5,259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bahay Pares Tapsihan Home Page</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-image: url("/images/headerbackground.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.logo {
+    max-width: 200px;
+    margin-right: 10px;
+    background-color: #0056b3;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+nav {
+    text-align: center;
+    padding: 20px 0px;
+    background-color: #0056b3;
+}
+
+.signin-login-section nav {
+    background-color: #f9f9f9;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+nav a {
+    color: #023469;
+    text-decoration: none;
+    padding: 10px 30px;
+    margin: 0px 10px;
+    border-radius: 100px;
+    transition: background-color 0.3s;
+    background-color: #f9f9f9;
+}
+
+nav a:hover {
+    background-color: #ccd2f0;
+}
+/*nav.button{
+    text-align: center;
+    padding: 20px 0px;
+    background-color: #0056b3;
+}*/
+
+section {
+    padding: 40px;
+    text-align: center;
+}
+
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+
+}
+
+form input[type="text"],
+form input[id="message"] {
+    padding: 10px;
+    width: 250px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 10px;
+}
+
+.welcome-signin-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+}
+
+.welcome-section {
+    flex: 1;
+    max-width: 500px;
+}
+
+.menu-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.menu-item {
+    width: 350px;
+    margin-bottom: 40px;
+    border: 2px solid #0056b3;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item img {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 8px;
+}
+
+.menu-item h3 {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #004080;
+}
+
+.menu-item p {
+    font-size: 16px;
+    color: #666;
+}
+
+textarea{
+    padding: 10px;
+    width: 250px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 10px;
+}
+
+
+.special-offers {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 40px;
+}
+
+.special-offer {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #0072e3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.special-offer img {
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.special-offer h3 {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.special-offer p {
+    font-size: 16px;
+}
+
+button {
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #c0392b;
+}
+
+.signin-login-section {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 600px;
+}
+
+.login-section h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #004080;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    padding: 10px;
+    width: 250px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 10px;
+}
+
+.login-form button {
+    background-color: #c8ff00;
+    width: 200px;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+    </style>
 </head>
 <body>
     
