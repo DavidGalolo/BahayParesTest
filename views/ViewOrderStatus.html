@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Order Status Page</title> 
+<link rel="stylesheet" type="text/css" href="/css/styles.css" />
+</head>
+<body  class = "container">
+  <header>
+    <div class="header-content">
+        <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+    </div>
+    <nav>
+      <a href="/menu">Menu</a>
+      <a href="/Vieworder">Delivery Status</a>
+      <a href="/">Logout</a>
+    </nav>
+</header>
+
+<!-- Search Form -->
+  <h2 align="center">View Order Status</h2>
+  
+  <table align="center">
+    <form id="searchForm">
+    <tr>
+    <td><label for="searchorderid">Search by Order ID:</label></td>
+    <td>
+      <input type="text" id="searchorderid" name="orderid" required>
+      
+    </td>
+</tr>
+    <tr>
+    <td colspan="2" align="center"><button type="button" onclick="searchRecord()">Search Record</button></td>
+</tr>
+</form>
+</table> 
+<hr> 
+
+  <!-- Show in TextBox -->
+  <h2 align="center">Search Result</h2>
+  
+  <table align="center">  <form id="updateForm">
+    <tr>
+    <td><label for="updateorderid">Order ID:</label></td>
+    <td><input type="text" id="updateorderid" name="orderid" readonly></td>
+    </tr>
+    <tr>
+    <td><label for="updatetotalprice">Total Price:</label></td>
+    <td><input type="number" id="updatetotalprice" name="totalprice" readonly></td>
+    
+</tr>
+<tr>
+    <td><label for="updatelocation"> Delivery Location:</label></td>
+    <td><input type="text" id="updatelocation" name="location" readonly></td>
+</tr>
+<tr>
+  <td><hr></td>
+  <td><hr></td>
+</tr>
+<tr>
+    <td><label for="updatedstatus">Deliver Status:</label></td>
+    <td><input type="text" id="updatedstatus" name="dstatus" readonly></td>
+</tr>
+<tr>    
+ </form></table> 
+
+  
+  <script>
+  
+        async function searchRecord() {
+        const orderid = document.getElementById('searchorderid').value;
+
+        try {
+          const response = await fetch(`/ordersearch?orderid=${orderid}`);
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById('updateorderid').value = result.orderid;
+            document.getElementById('updatetotalprice').value = result.totalprice;
+            document.getElementById('updatelocation').value = result.location;
+            document.getElementById('updatedstatus').value = result.deliverystatus;
+          } else {
+            alert(result.error);
+          }
+        } catch (error) {
+          console.error('Error searching for orderid:', error);
+          alert('An error occurred while searching for the orderid.');
+        }
+      }
+
+  </script>
+</body>
+</html>

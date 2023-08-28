@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Update Order Status Page</title> 
+<link rel="stylesheet" type="text/css" href="/css/styles.css" />
+</head>
+<body  class = "container">
+  <header>
+    <div class="header-content">
+        <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+    </div>
+    <nav>
+        <a href="/accounts">Accounts Page</a>
+        <a href="/Updateorder">Update Delivery Status</a>
+        <a href="/">Logout</a>
+    </nav>
+</header>
+
+<h2 align="center">Update Delivery Status</h2>
+
+<div class="menu-items-container">
+  <div class="menu-item" style="margin: 10px;">
+      <table>
+          <thead>
+            <tr>
+              <th>OrderID</th>
+              <th>Items</th>
+            </tr>
+          </thead>
+          <tbody id="data-body">
+            <!-- Data from MongoDB will be inserted here -->
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<!-- Search Form -->
+  <table align="center">
+    <form id="searchForm">
+    <tr>
+    <td><label for="searchorderid">Search by Order ID:</label></td>
+    <td>
+      <input type="text" id="searchorderid" name="orderid" required>
+      
+    </td>
+</tr>
+    <tr>
+    <td colspan="2" align="center"><button type="button" onclick="searchRecord()">Search Record</button></td>
+</tr>
+</form>
+</table> 
+<hr> 
+
+  <!-- Show in TextBox -->
+  <h2 align="center">Search Result</h2>
+  
+  <table align="center">  <form id="updateForm">
+    <tr>
+    <td><label for="updateorderid">Order ID:</label></td>
+    <td><input type="text" id="updateorderid" name="orderid" readonly></td>
+    </tr>
+    <tr>
+    <td><label for="updatetotalprice">Total Price:</label></td>
+    <td><input type="text" id="updatetotalprice" name="totalprice" readonly></td>
+    
+</tr>
+<tr>
+    <td><label for="updatelocation"> Delivery Location:</label></td>
+    <td><input type="text" id="updatelocation" name="location" readonly></td>
+</tr>
+<tr>
+  <td><hr></td>
+  <td><hr></td>
+</tr>
+<tr>
+  <td><label for="updatedstatus">Delivery Status:</label></td>
+  <td><input type="text" id="updatedstatus" name="deliverystatus" readonly></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="center"><button type="button" onclick="updateDeliveryStatus()">Update to Delivering</button></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="center"><button type="button" onclick="markAsDelivered()">Mark as Delivered</button></td>
+</tr>
+ </form></table> 
+
+  
+  <script>
+
+      async function fetchData() {
+          try {
+            const response = await fetch('/adminfetch');
+            const data = await response.json();
+
+            // Access the table body element
+            const dataBody = document.getElementById('data-body');
+
+            // Clear existing table rows before populating the data
+            dataBody.innerHTML = '';
+
+            // Loop through the data and create table rows
+            data.forEach((order) => {
+              const row = document.createElement('tr');
+              const orderIDCell = document.createElement('td');
+              const cartItemsCell = document.createElement('td');
+              const quantityCell = document.createElement('td');
+
+              orderIDCell.textContent = order.orderId;
+
+              // Extract the item names and quantities from each object in the cartItems array
+              const itemDetails = order.cartItems.map(item => `${item.name} (${item.quantity})`);
+              cartItemsCell.textContent = itemDetails.join(', ');
+
+              row.appendChild(orderIDCell);
+              row.appendChild(cartItemsCell);
+              row.appendChild(quantityCell);
+
+              dataBody.appendChild(row);
+            });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        }
+
+        // Fetch data when the page loads
+        fetchData();
+  
+        async function searchRecord() {
+              const orderid = document.getElementById('searchorderid').value;
+
+              try {
+                const response = await fetch(`/ordersearch?orderid=${orderid}`);
+                const result = await response.json();
+
+                if (response.ok) {
+                  document.getElementById('updateorderid').value = result.orderid;
+                  document.getElementById('updatetotalprice').value = result.totalprice;
+                  document.getElementById('updatelocation').value = result.location;
+                  document.getElementById('updatedstatus').value = result.deliverystatus;
+                } else {
+                  alert(result.error);
+                }
+              } catch (error) {
+                console.error('Error searching for orderid:', error);
+                alert('An error occurred while searching for the orderid.');
+              }
+        }
+    
+      async function updateDeliveryStatus() {
+        const orderid = document.getElementById('searchorderid').value;
+        const deliverystatusInput = document.getElementById('updatedstatus');
+        const totalpriceInput = document.getElementById('updatetotalprice');
+        const locationInput = document.getElementById('updatelocation');
+
+        try {
+          // Check the current delivery status
+          if (deliverystatusInput.value === 'Pending') {
+            const data = {
+              orderid,
+              totalprice: parseFloat(totalpriceInput.value).toFixed(2),
+              location: locationInput.value,
+              deliverystatus: 'Delivering',
+            };
+
+            const response = await fetch('/update', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            // Update the inputs with the new values
+            deliverystatusInput.value = 'Delivering';
+            // totalprice and location are readonly, so we don't need to update them.
+          } else {
+            alert('The status can only be changed when it is "Pending."');
+          }
+        } catch (error) {
+          console.error('Error updating delivery status:', error);
+          alert('An error occurred while updating the delivery status.');
+        }
+      }
+
+      async function markAsDelivered() {
+        const orderid = document.getElementById('searchorderid').value;
+        const deliverystatusInput = document.getElementById('updatedstatus');
+        const totalpriceInput = document.getElementById('updatetotalprice');
+        const locationInput = document.getElementById('updatelocation');
+
+        try {
+          // Check the current delivery status
+          if (deliverystatusInput.value === 'Delivering') {
+            const data = {
+              orderid,
+              totalprice: parseFloat(totalpriceInput.value).toFixed(2),
+              location: locationInput.value,
+              deliverystatus: 'Delivered',
+            };
+
+            const response = await fetch('/update', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            // Update the inputs with the new values
+            deliverystatusInput.value = 'Delivered';
+            // totalprice and location are readonly, so we don't need to update them.
+          } else {
+            alert('The status can only be changed when it is "Delivering."');
+          }
+        } catch (error) {
+          console.error('Error updating delivery status:', error);
+          alert('An error occurred while updating the delivery status.');
+        }
+      }
+
+
+
+  </script>
+</body>
+</html>

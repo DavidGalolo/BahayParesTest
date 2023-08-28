@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles1.css" />
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+        </div>
+        <nav>
+            <a href="/menu">Menu</a>
+            <a href="/Vieworder">Delivery Status</a>
+            <a href="/">Logout</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="categories">
+        <center><img class="logo" src="/images/bahaypareslogo.png" alt="Logo"><br></center>
+        <label>1. Please input the quantity of food you want to order!</label><br>
+        <label>2. Click the add to cart in order for you to add it to your cart</label><br>
+        <label>3. Once you have added the foods you want order please click the confirm order to proceed to the payment</label><br>
+        <label>Feel free to take as much time and view our menu thank you!</label>
+        </div>
+        <!--<div class="categories">
+            <h2>Categories</h2>
+            <div class="category-item"><a href="/dishes">Dishes</a></div>
+            <div class="category-item"><a href="/bundle">Bundles</a></div>
+            <div class="category-item"><a href="/cocktail">Cocktails</a></div>
+        </div>-->
+        <div class="menu-container">
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Pares</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 58.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Pares', 58.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Pork Tapa</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 158.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Pork Tapa', 158.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Crispy Pata</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 350.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Crispy Pata', 350.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Bagnet</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 108.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Bagnet', 108.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Silog Bundle</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 300.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Silog Bundle', 300.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item-container">
+                <div class="item-info">
+                    <div class="item-name">Crispy Ulo Bundle</div>
+                </div>
+                <div class="quantity-container">
+                    <div class="item-price">Php 400.00</div>&nbsp;
+                    <input type="number" class="quantity-input" min="1" value="1">&nbsp;
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart(event, 'Crispy Ulo Bundle', 400.00)">Add to Cart</button>
+            </div>
+            <!-- Add more menu items here -->
+        </div>
+        <div class="cart">
+            <h2>Cart</h2>
+            <div class="cart-container">
+                <table class="cart-table">
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Remove</th> <!-- Adding the "Remove" column header -->
+                    </tr>
+                    <tbody id="cart-items"></tbody>
+                </table>
+            </div>
+            <div class="cart-total" id="cart-total" style="display: none;">Total: Php 0.00</div>
+            <button class="confirm-order-btn" id="confirm-order-btn" onclick="confirmOrder()" style="display: none;">Confirm Order</button>
+        </div>
+    </div>
+
+    <script>
+        const cartItems = [];
+        const confirmOrderBtn = document.getElementById("confirm-order-btn");
+        const cartTotalElement = document.getElementById("cart-total");
+
+        function addToCart(event, itemName, itemPrice) {
+            const quantityInput = event.target.previousElementSibling.querySelector(".quantity-input");
+            const quantity = parseInt(quantityInput.value);
+            if (quantity < 1) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            // Check if the item is already in the cart
+            const existingCartItem = cartItems.find(item => item.name === itemName);
+            if (existingCartItem) {
+                existingCartItem.quantity += quantity; // Update the quantity
+            } else {
+                const cartItem = {
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: quantity
+                };
+                cartItems.push(cartItem); // Add new item to cart
+            }
+
+            updateCart();
+            quantityInput.value = "1"; // Reset quantity input to 1 after adding to cart
+            confirmOrderBtn.style.display = cartItems.length > 0 ? "block" : "none";
+            cartTotalElement.style.display = cartItems.length > 0 ? "block" : "none";
+        }
+
+        function removeFromCart(itemName) {
+            const itemIndex = cartItems.findIndex(item => item.name === itemName);
+            if (itemIndex !== -1) {
+                const item = cartItems[itemIndex];
+                if (item.quantity > 1) {
+                    item.quantity--; // Decrease quantity by 1
+                } else {
+                    cartItems.splice(itemIndex, 1); // Remove the item completely if quantity is 0
+                }
+                updateCart();
+                confirmOrderBtn.style.display = cartItems.length > 0 ? "block" : "none";
+                cartTotalElement.style.display = cartItems.length > 0 ? "block" : "none";
+            }
+        }
+
+        function updateCart() {
+            const cartList = document.getElementById("cart-items");
+            cartList.innerHTML = "";
+
+            let total = 0;
+            cartItems.forEach(item => {
+                const row = document.createElement("tr");
+                const itemNameCell = document.createElement("td");
+                itemNameCell.innerText = item.name;
+                row.appendChild(itemNameCell);
+
+                const itemQuantityCell = document.createElement("td");
+                itemQuantityCell.innerText = item.quantity;
+                row.appendChild(itemQuantityCell);
+
+                const itemPriceCell = document.createElement("td");
+                itemPriceCell.innerText = `Php ${item.price.toFixed(2)}`;
+                row.appendChild(itemPriceCell);
+
+                // Add a "Remove" button
+                const removeButtonCell = document.createElement("td");
+                const removeButton = document.createElement("button");
+                removeButton.innerText = "Remove";
+                removeButton.addEventListener("click", () => removeFromCart(item.name));
+                removeButtonCell.appendChild(removeButton);
+                row.appendChild(removeButtonCell);
+
+                cartList.appendChild(row);
+                total += item.price * item.quantity;
+            });
+
+            cartTotalElement.innerText = `Total: Php ${total.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+  // Generates a random 3-digit numeric order ID
+  const min = 100; // Minimum 3-digit number (100)
+  const max = 999; // Maximum 3-digit number (999)
+  const orderId = Math.floor(Math.random() * (max - min + 1)) + min;
+  return orderId.toString(); // Convert the number to a string
+}
+
+function confirmOrder() {
+  if (cartItems.length === 0) {
+    alert('Your cart is empty. Please add items to the cart first.');
+    return;
+  }
+
+  const orderId = generateOrderId(); // Generate a random orderid
+  console.log('Generated orderid:', orderId);
+
+  // Send the cart data and orderId to the server
+  fetch('/confirmOrder', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ orderId, cartItems })
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data); // Show the success message from the server
+
+      // Redirect to the transaction page if the order is confirmed
+      if (data === "Order confirmed proceeding to transaction") {
+        window.location.href = '/transactionpage.html';
+      }
+    })
+    .catch(error => {
+      console.error('Error confirming order:', error);
+      alert('An error occurred while confirming your order.');
+    });
+}
+    </script>
+</body>
+</html>

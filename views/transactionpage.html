@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles1.css" />
+    <link rel="stylesheet" type="text/css" href="/css/styles2.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+      </div>
+      <nav>
+        <a href="/menu">Menu</a>
+        <a href="/Vieworder">Delivery Status</a>
+        <a href="/">Logout</a>
+      </nav>
+    </header>
+    <div class="containers">
+      <div class="table.center"> <!-- Add a new div with the "center-table" class -->
+        <div class="order-details">
+          <table>
+            <thead>
+              <tr>
+                <th>OrderId</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody id="order-body">
+              <!-- Data from MongoDB will be inserted here -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">Total: <span id="total-price"></span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <br>
+      <center>
+        <label>Location: </label>
+        <input class="input-location" type="text" id="location" name="location" placeholder="Enter Location" required>&nbsp;
+        <br>
+        <label>Delivery Status: </label>
+        <label>Pending...</label>
+        <button class="confirm-order-btn" onclick="buy()">Buy</button> <!-- Add a "Buy" button -->
+      </center>
+    </div>
+    <script>
+      let latestOrderId = '';
+      async function fetchLatestOrder() {
+  try {
+    const response = await fetch('/latestOrder');
+    const latestOrder = await response.json();
+
+    // Access the table body element
+    const dataBody = document.getElementById('order-body');
+
+    // Access the total price element
+    const totalPriceElement = document.getElementById('total-price');
+
+    // Clear any existing content
+    dataBody.innerHTML = '';
+    totalPriceElement.textContent = ''; // Clear total price
+
+    // Check if the latestOrder is not empty
+    if (latestOrder) {
+      const orderId = latestOrder.orderId;
+      const cartItems = latestOrder.cartItems;
+      let totalPrice = 0;
+
+      // Flag to track if the orderId has been displayed already
+      let orderIdDisplayed = false;
+
+      // Loop through the cartItems and create table rows
+      cartItems.forEach((item, index) => {
+        const row = document.createElement('tr');
+
+        // Display the OrderId in the first column for the first item in the order
+        if (!orderIdDisplayed && index === 0) {
+          const orderIdCell = document.createElement('td');
+          orderIdCell.textContent = orderId;
+          row.appendChild(orderIdCell);
+          orderIdDisplayed = true;
+        } else {
+          const emptyCell = document.createElement('td');
+          row.appendChild(emptyCell);
+        }
+
+        const itemNameCell = document.createElement('td');
+        itemNameCell.textContent = item.name;
+        row.appendChild(itemNameCell);
+
+        const quantityCell = document.createElement('td');
+        quantityCell.textContent = item.quantity;
+        row.appendChild(quantityCell);
+
+        const priceCell = document.createElement('td');
+        priceCell.textContent = `Php${item.price.toFixed(2)}`;
+        row.appendChild(priceCell);
+
+        dataBody.appendChild(row);
+
+        // Update total price
+        totalPrice += item.price * item.quantity;
+      });
+
+      // Display the total price at the end of the table
+      totalPriceElement.textContent = `Php ${totalPrice.toFixed(2)}`;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+      window.onload = fetchLatestOrder;
+      async function buy() {
+        try {
+          const totalPrice = parseFloat(document.getElementById('total-price').textContent.replace('Php', ''));
+
+          const formattedTotalPrice = totalPrice.toFixed(2);
+
+          const orderIdCell = document.querySelector('#order-body td:first-child');
+          const orderId = orderIdCell.textContent.trim();
+
+          const locationInput = document.getElementById('location');
+          const location = locationInput.value.trim();
+
+          if (!location) {
+            alert('Please enter the delivery location.');
+            return;
+          }
+
+          const order = {
+            orderid: orderId,
+            totalprice: formattedTotalPrice,
+            location: location,
+            deliverystatus: "Pending" 
+          };
+
+          const response = await fetch('/storeOrder', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+          });
+
+          if (response.ok) {
+            console.log('Order data stored successfully.');
+            alert('Order placed successfully!');
+            window.location.href = '/menu';
+          } else {
+            console.error('Error storing order data.');
+            alert('Error occurred while placing the order. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error during buy process:', error);
+          alert('An error occurred while processing the order. Please try again.');
+        }
+      }
+
+  </script>
+</body>
+</html>

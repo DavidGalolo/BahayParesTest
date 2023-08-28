@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahay Pares Tapsihan Home Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+
+        </div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/AboutUs">About Us</a>
+            <a href="/ContactUs">Contact</a>
+        </nav>
+    </header>
+
+    
+    <section>
+        <div class="main-content">
+            <div class="welcome-signin-container">
+                <div class="welcome-section">
+                    <h2>Welcome to Bahay Pares Tapsihan!</h2>
+                    <p>
+                        Order delicious food online and have it delivered to your doorstep.
+                    </p>
+                    <p>
+                        Explore our menu and choose from a variety of dishes to satisfy your cravings.
+                    </p>
+                    <p>
+                        Login to get started!
+                    </p>
+                </div>
+
+                <div class="signin-login-section">
+                    <!-- Login Form -->
+                    <div class="login-section">
+                      <h2>Login</h2>
+                      <div class="login-form">
+                        <form id="loginForm">
+                          <input type="text" placeholder="Username" id="searchaccount" name="username">
+                          <input type="password" placeholder="Password" id="password" name="password">
+                          <button type="button" onclick="login()">Login</button>
+                          <nav>
+                            <a href="/register">Don't have an account?</a>
+                          </nav>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Menu -->
+        <h2>Featured Menu</h2>
+        <div class="menu-items-container">
+            <div class="menu-item">
+                <img src="/images/pares.jpg" alt="Dish 1" width="400" height="300">
+                <h3>Pares</h3>
+                <p>Pares Meals</p>
+                <p>Price: Php 58.00</p>
+            </div>
+            <div class="menu-item">
+                <img src="/images/porktapa.jpg" alt="Dish 2"width="400" height="300">
+                <h3>Pork Tapa</h3>
+                <p>Ala Carte</p>
+                <p>Price: Php 158.00</p>
+            </div>
+            <div class="menu-item">
+                <img src="/images/crispypata.jpg" alt="Dish 3"width="400" height="300">
+                <h3>Crispy Pata</h3>
+                <p>Isolation Special</p>
+                <p>Price: Php 350.00</p>
+            </div>
+            <div class="menu-item">
+                <img src="/images/bagnet.jpg" alt="Dish 4"width="400" height="300">
+                <h3>Bagnet</h3>
+                <p>Silog Meals</p>
+                <p>Price: Php 108.00</p>
+            </div>
+        </div>
+
+        <!-- Special offers -->
+        <div class="special-offers">
+            <h2>Special Offers</h2>
+            <div class="special-offer">
+                <img src="/images/silogbundle.jpg" alt="Dish 3"width="600" height="350">
+                <h3>Silog Bundle</h3>
+                <p>Choose 4 silog meals for only Php 300.00!</p>
+            </div>
+            <div class="special-offer">
+                <img src="/images/bundle2.jpg" alt="Dish 4"width="600" height="350">
+                <h3>Crispy Ulo Bundle</h3>
+                <p>Get all these selected items for only Php 400.00!.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        async function login() {
+            const username = document.getElementById('searchaccount').value;
+            const password = document.getElementById('password').value;
+            const loginForm = document.getElementById('loginForm');
+
+            if (username === 'admin' && password === 'admin') {
+                window.location.href = '/accounts';
+            } else {
+                try {
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password }),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        console.log('Login successful:', result.user);
+                        // Redirect to a dashboard or home page upon successful login
+                        window.location.href = '/menu'; // Replace with your desired route
+                    } else {
+                        console.error('Login failed:', result.error);
+                        alert('Invalid credentials. Please try again.');
+                    }
+                    } catch (error) {
+                    console.error('Error during login:', error);
+                    alert('An error occurred while logging in. Please try again later.');
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

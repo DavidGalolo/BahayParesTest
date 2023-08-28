@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahay Pares Tapsihan Register Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <img class="logo" src="/images/bahaypareslogo.png" alt="Logo">
+
+        </div>
+        <nav>
+          <a href="/">Home</a>
+        </nav>
+    </header>
+  <!-- Insert Form -->
+  <h2 align="center">Register New Account</h2>
+  
+  <table align="center"><form id="insertForm">
+    <tr></tr>
+    <td><label for="username">Username:</label></td>
+    <td><input type="text" id="username" name="username" required></td>
+</tr>
+<tr>
+    <td><label for="email">Email:</label></td>
+    <td><input type="text" id="email" name="email" required></td>
+</tr>
+<tr>
+    <td><label for="password">Password:</label></td>
+    <td><input type="password" id="password" name="password" required></td>
+</tr>
+<tr>
+    <td><label>Confirm Password:</label></td>
+    <td><input type="password" id="cpassword" name="department" onblur="validate()" required></td>
+</tr>
+
+
+<tr> 
+    <td colspan="2" align="center"><button type="button" onclick="insertRecord()">register</button></td>
+</tr>
+  </form></table>
+
+<hr height="200px" width="50%" color="white" align="center">
+
+<script>
+function validate() {
+var x= document.getElementById("password");
+    var y= document.getElementById("cpassword");
+if(x.value==y.value) return;
+else alert("password not same");
+}
+</script>  
+  
+
+  <script>
+    async function insertRecord() {
+      const formData = new FormData(document.getElementById('insertForm'));
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/insert', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        alert(result.message);
+        document.getElementById('insertForm').reset();
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Error inserting record:', error);
+        alert('An error occurred while inserting the record.');
+      }
+    }
+  </script>
+</body>
+</html>
