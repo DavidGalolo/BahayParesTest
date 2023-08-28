@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 // Connection URL and Database Name
-const url = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB connection URL
+const url = 'mongodb+srv://BahayParesDB:<chkBX4BzDXvScktM>@cluster0.dzsyavl.mongodb.net/?retryWrites=true&w=majority'; // Replace with your MongoDB connection URL
 const dbName = 'BahayParesDB'; // Replace with your database name
 const collectionName = 'UserAccounts'; // Replace with your collection name
 
