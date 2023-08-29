@@ -179,7 +179,7 @@ app.post('/insertcomments', async (req, res) => {
 
 app.get('/admin', async (req, res) => {
   try {
-    const client = await MongoClient.connect('mongodb://127.0.0.1:27017/BahayParesDB', options);
+    const client = await MongoClient.connect('mongodb+srv://BahayParesDB:chkBX4BzDXvScktM@cluster0.dzsyavl.mongodb.net/', options);
     const db = client.db();
     const collection = db.collection('UserAccounts');
 
@@ -199,7 +199,7 @@ app.get('/admin', async (req, res) => {
 
 app.get('/adminfetch', async (req, res) => {
   try {
-    const client = await MongoClient.connect('mongodb://127.0.0.1:27017/BahayParesDB', options);
+    const client = await MongoClient.connect('mongodb+srv://BahayParesDB:chkBX4BzDXvScktM@cluster0.dzsyavl.mongodb.net/', options);
     const db = client.db();
     const collection = db.collection('CustomerOrders');
 
